@@ -1,0 +1,81 @@
+import { Request, Response } from 'express';
+import { UserModel, UserProps } from '../models/UserModel';
+import mongoose from 'mongoose';
+import { BookProps, } from '../models/BookModel';
+import { decrementBookStockService, getBookService } from '../_services/bookServices';
+import { addBookService, calculateUserSpent, createUserService, getUserService } from '../_services/userServices';
+import { comparePasswords, hashPassword } from '../utils/bcrypt';
+import { assignCookieSession } from '../utils/sessions';
+import { getUserBooks } from '../_repositories/userRepository';
+
+export const registerUser = async (req: Request, res: Response): Promise<any> => {
+    const { name, username, password }: UserProps = req.body;
+
+    try {
+        const hashedPassword = await hashPassword(password);
+        await createUserService(name, username, hashedPassword)
+
+        await UserModel.create({ name, username, password: hashedPassword });
+
+        return res.status(200).json({ message: `Success registering ${name}`, user: { name, username } });
+    } catch (error) {
+        console.error("Registration error:", error);
+        return res.status(500).json({ message: 'Internal server error.', error });
+    }
+}
+
+export const loginUser = async (req: Request, res: Response): Promise<any> => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await getUserService(username);
+
+        const isMatch = comparePasswords(password, user.password);
+        if (!isMatch)
+            throw new Error('Invalid username or password.');
+
+        await assignCookieSession(req, user._id);
+
+        return res.status(200).json({ message: 'Login successful.' });
+    } catch (error) {
+        console.error("Login error:", error);
+        return res.status(500).json({ message: 'Internal server error.', error });
+    }
+}
+
+export const addBookToUser = async (req: Request, res: Response): Promise<any> => {
+    const { _id: book_id, title }: BookProps = req.body;
+    const user_id = req.session.userId as mongoose.Types.ObjectId;
+
+    try {
+        const [user, book] = await Promise.all([
+            getUserBooks(user_id),
+            getBookService(title, book_id)
+        ]);
+
+        const totalSpent = await calculateUserSpent(user, book.price);
+
+        const updatedUser = await addBookService(user_id, book.id, totalSpent);
+
+        const updatedBook = await decrementBookStockService(user_id, book.id);
+
+        return res.status(200).json({ updatedUser, updatedBook });
+
+    } catch (error) {
+        console.error("Error adding book:", error);
+        return res.status(500).json({ message: "Internal server error.", error });
+    }
+};
+
+export const getAllUserBooks = async (req: Request, res: Response): Promise<any> => {
+    const user_id = req.session.userId as mongoose.Types.ObjectId;
+
+    try {
+        const userBooks = await getUserBooks(user_id);
+
+        return res.status(200).json({ userBooks });
+    } catch (error) {
+        console.error("Error getting user books:", error);
+        return res.status(500).json({ message: "Internal server error.", error });
+    }
+}
