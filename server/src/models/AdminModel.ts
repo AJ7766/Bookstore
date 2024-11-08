@@ -1,6 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 
 export interface AdminProps {
+    _id: mongoose.Types.ObjectId;
     name: string;
     username: string;
     password: string;

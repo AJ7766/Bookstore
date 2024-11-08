@@ -1,7 +1,7 @@
 import { createAdmin, getAdmin, getUserList } from "../_repositories/adminRepository";
-import { UserProps } from "../models/UserModel";
+import { AdminProps } from "../models/AdminModel";
 
-export const getAdminService = async (username: string): Promise<UserProps> => {
+export const getAdminService = async (username: string): Promise<AdminProps> => {
     const admin = await getAdmin(username);
 
     if (!admin)

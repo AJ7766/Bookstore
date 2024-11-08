@@ -6,7 +6,13 @@ export interface BookProps {
     price: number;
     stock: number;
     limited?: boolean;
-    user?: mongoose.Types.ObjectId[];
+    user: mongoose.Types.ObjectId[];
+}
+
+
+export interface SimplifiedBookProps {
+    book: BookProps;
+    quantity: number;
 }
 
 export interface BookDocument extends Document, BookProps {
@@ -46,7 +52,6 @@ const bookSchema = new Schema<BookDocument>({
     user: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        unique: true
     }]
 }, { timestamps: true });
 

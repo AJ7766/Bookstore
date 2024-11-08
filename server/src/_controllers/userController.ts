@@ -3,7 +3,7 @@ import { UserModel, UserProps } from '../models/UserModel';
 import mongoose from 'mongoose';
 import { BookProps, } from '../models/BookModel';
 import { decrementBookStockService, getBookService } from '../_services/bookServices';
-import { addBookService, calculateUserSpent, createUserService, getUserService } from '../_services/userServices';
+import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserService } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession } from '../utils/sessions';
 import { getUserBooks } from '../_repositories/userRepository';
@@ -28,7 +28,7 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     const { username, password } = req.body;
 
     try {
-        const user = await getUserService(username);
+        const user = await getUserService(undefined, username);
 
         const isMatch = comparePasswords(password, user.password);
         if (!isMatch)
@@ -49,15 +49,14 @@ export const addBookToUser = async (req: Request, res: Response): Promise<any> =
 
     try {
         const [user, book] = await Promise.all([
-            getUserBooks(user_id),
+            getUserBooksService(user_id),
             getBookService(title, book_id)
         ]);
+        const totalSpent = await calculateUserSpent(book.price, user);
+        
+        const updatedUser = await addBookService(user_id, book._id, totalSpent);
 
-        const totalSpent = await calculateUserSpent(user, book.price);
-
-        const updatedUser = await addBookService(user_id, book.id, totalSpent);
-
-        const updatedBook = await decrementBookStockService(user_id, book.id);
+        const updatedBook = await decrementBookStockService(user_id, book._id);
 
         return res.status(200).json({ updatedUser, updatedBook });
 
