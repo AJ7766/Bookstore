@@ -14,7 +14,9 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: 'https://jackies-bookstore.vercel.app',
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
 }));
 
