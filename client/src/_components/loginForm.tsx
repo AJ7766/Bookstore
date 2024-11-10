@@ -14,10 +14,10 @@ export default function LoginForn() {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api`, {
         method: "GET",
         //body: JSON.stringify({ username, password }),
-        //credentials: 'include',
-        //headers: {
-       //   "Content-Type": "application/json",
-       // },
+        //credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
       if (!res.ok) {
         const data = await res.json();
@@ -41,7 +41,7 @@ export default function LoginForn() {
 
   return (
     <div className="login-form-container">
-        <img src='../images/bookstore-logo.png'/>
+      <img src="../images/bookstore-logo.png" />
       <div className="h-10 flex items-center px-9">
         {error ? (
           <p className="loginTextMessage text-gray-500 text-center">

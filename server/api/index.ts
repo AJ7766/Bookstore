@@ -20,25 +20,11 @@ declare module 'express-session' {
 app.use(express.json());
 
 app.use(cors({
-    origin: '*',
-    methods: 'GET, POST',
-    allowedHeaders: 'Content-Type',
-  }));
-
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'fallbackKey',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60,
-        sameSite: 'strict'
-    },
-    rolling: true,
-    unset: 'destroy',
+    origin: ['http://localhost:5173', 'https://jackies-bookstore.vercel.app'],
+    methods: 'GET, POST, OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
 }));
+
 
 app.use('/api/admin', adminRouter);
 app.use('/api', userRouter);
