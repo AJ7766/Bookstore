@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import adminRouter from '../src/_routes/adminRoutes';
@@ -9,16 +8,7 @@ import mongoose from 'mongoose';
 import { connectDB } from '../src/config/database';
 
 dotenv.config();
-const PORT = process.env.PORT;
-
 const app = express();
-
-app.use(cors({
-    origin: 'https://jackies-bookstore.vercel.app/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}));
 
 declare module 'express-session' {
     interface SessionData {
@@ -34,7 +24,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        //secure: true,
+        secure: true,
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
         sameSite: 'strict'
