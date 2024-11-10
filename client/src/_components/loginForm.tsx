@@ -11,7 +11,7 @@ export default function LoginForn() {
     event.preventDefault();
     setLoadingBtn(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         credentials: "include",
