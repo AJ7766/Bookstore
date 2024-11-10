@@ -1,4 +1,4 @@
-import { createAdmin, getAdmin, getUserList } from "../_repositories/adminRepository";
+import { createAdmin, getAdmin, getUsers } from "../_repositories/adminRepository";
 import { AdminProps } from "../models/AdminModel";
 
 export const getAdminService = async (username: string): Promise<AdminProps> => {
@@ -19,8 +19,8 @@ export const createAdminService = async (name: string, username: string, hashedP
     return admin
 }
 
-export const getUserListService = async () => {
-    const users = await getUserList();
+export const getUsersService = async () => {
+    const users = await getUsers();
     if (!users)
         throw new Error('Users not found');
 

@@ -1,6 +1,6 @@
-import { RegisterUserProps } from "../../../models/UserModel";
+import { CreateUserProps } from "../../../models/UserModel";
 
-export function registerValidation(props: RegisterUserProps) {
+export function createUserSchema(props: CreateUserProps) {
     const { name, username, password } = props;
 
     if (!name || !username || !password) {

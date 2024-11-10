@@ -1,17 +1,17 @@
 import mongoose, { Model, Schema, Document } from "mongoose";
-import { SimplifiedBookProps } from "./BookModel";
+import { PopulatedBookProps } from "./BookModel";
 
 export interface UserProps {
     _id: mongoose.Types.ObjectId;
     name: string;
     username: string;
     password: string;
-    totalSpent?: number;
+    totalSpent: number;
     books: { book: mongoose.Types.ObjectId; quantity: number }[]
 }
 
 export interface UserPopulatedProps extends Omit<UserProps, 'books'> {
-    books: SimplifiedBookProps[];
+    books: PopulatedBookProps[];
 }
 
 export interface UserWithQuantityProps {
@@ -19,7 +19,7 @@ export interface UserWithQuantityProps {
     quantity: number;
 }
 
-export interface RegisterUserProps {
+export interface CreateUserProps {
     name: string;
     username: string;
     password: string;

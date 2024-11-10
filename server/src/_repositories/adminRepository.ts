@@ -9,11 +9,12 @@ export const createAdmin = async (name: string, username: string, hashedPassword
     return await AdminModel.create({ name, username, password: hashedPassword });
 }
 
-export const getUserList = async () => {
+export const getUsers = async () => {
     return await UserModel.find({})
-    .select('name')
-    .sort({ createdAt: -1 })
-    .lean();}
+        .select('name')
+        .sort({ createdAt: -1 })
+        .lean();
+}
 
 export const addRestockMessage = async (message: string) => {
     return await AdminModel.updateMany({}, { $addToSet: { messages: message } }).lean();

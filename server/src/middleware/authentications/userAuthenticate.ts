@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { UserModel } from '../../models/UserModel';
 
 export const userAuthenticate = async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.session.userId) return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
+    if (!req.session.user_id) 
+        return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
 
     try {
-        const user = await UserModel.findById(req.session.userId)
+        const user = await UserModel.findById(req.session.user_id)
 
         if (!user)
             return res.status(401).json({ message: 'Unauthorized access. Please log in.' });

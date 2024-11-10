@@ -6,5 +6,5 @@ export const assignCookieSession = async (req: Request, user_id: mongoose.Types.
     if (!req.session) {
         throw new Error("Session is not available on the request object");
     }
-    req.session.userId = user_id;
+    req.session.user_id = user_id;
 }

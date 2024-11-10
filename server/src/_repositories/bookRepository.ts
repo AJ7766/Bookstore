@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
-import { BookModel, BookProps } from "../models/BookModel";
+import { BookModel, CreateBookProps, UpdateBookProps } from "../models/BookModel";
+
+export const createBook = async ({ title, price, stock, limited }: CreateBookProps) => {
+    return await BookModel.create({ title, price, stock, limited });
+}
 
 export const getBook = async (title: string, book_id: mongoose.Types.ObjectId) => {
     return await BookModel.findOne({ $or: [{ _id: book_id }, { title }] }).lean();
 }
 
-export const updateBook = async (book: BookProps) => {
-    return await BookModel.updateOne(
-        { _id: book._id },
-        { $set: { title: book.title, price: book.price, stock: book.stock, limited: book.limited } },
+export const updateBook = async ({ _id, title, price, stock, limited }: UpdateBookProps) => {
+    return await BookModel.findByIdAndUpdate(_id,
+        { $set: { title, price, stock, limited } },
         { new: true }
     );
 }
 
-export const getAllBooks = async () => {
+export const getBooks = async () => {
     return await BookModel.find({})
         .sort({ createdAt: -1 })
         .lean();

@@ -8,7 +8,10 @@ export interface AdminProps {
     messages?: string[];
 }
 
-export interface AdminRegisterProps extends AdminProps {
+export interface AdminRegisterProps {
+    name: string;
+    username: string;
+    password: string;
     key: string;
 }
 

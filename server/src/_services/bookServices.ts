@@ -1,7 +1,16 @@
 import mongoose from "mongoose";
-import { decrementBookStock, getAllBooks, getBook, updateBook } from '../_repositories/bookRepository';
+import { createBook, decrementBookStock, getBook, getBooks, updateBook } from '../_repositories/bookRepository';
 import { addRestockMessage, removeRestockMessage } from '../_repositories/adminRepository';
-import { BookProps } from "../models/BookModel";
+import { CreateBookProps, UpdateBookProps } from "../models/BookModel";
+
+export const createBookService = async ({title, price, stock, limited}: CreateBookProps) => {
+    const book = await createBook({title, price, stock, limited});
+
+    if (!book)
+        throw new Error('Creating book failed.');
+
+    return book;
+};
 
 export const getBookService = async (title: string, book_id: mongoose.Types.ObjectId) => {
     const book = await getBook(title, book_id);
@@ -11,16 +20,16 @@ export const getBookService = async (title: string, book_id: mongoose.Types.Obje
     return book;
 }
 
-export const updateBookService = async (book: BookProps) => {
-    const updatedBook = await updateBook(book);
+export const updateBookService = async ({_id, title, price, stock, limited}: UpdateBookProps) => {
+    const updatedBook = await updateBook({_id, title, price, stock, limited});
     if (!updatedBook)
         throw new Error("Failed to update book.");
 
     return updatedBook;
 }
 
-export const getAllBooksService = async () => {
-    const books = await getAllBooks();
+export const getBooksService = async () => {
+    const books = await getBooks();
 
     if (books.length === 0)
         throw new Error("No books found");

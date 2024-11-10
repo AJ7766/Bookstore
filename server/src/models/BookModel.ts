@@ -9,8 +9,7 @@ export interface BookProps {
     user: mongoose.Types.ObjectId[];
 }
 
-
-export interface SimplifiedBookProps {
+export interface PopulatedBookProps {
     book: BookProps;
     quantity: number;
 }
@@ -20,10 +19,16 @@ export interface BookDocument extends Document, BookProps {
     user: mongoose.Types.ObjectId[];
 }
 
-export interface updateBookProps {
-    _id?: mongoose.Types.ObjectId;
+export interface CreateBookProps {
+    title: string;
+    price: number;
+    stock: number;
+    limited?: boolean;
+}
+
+export interface UpdateBookProps {
+    _id: mongoose.Types.ObjectId;
     title?: string;
-    newTitle?: string;
     price?: number;
     stock?: number;
     limited?: boolean;

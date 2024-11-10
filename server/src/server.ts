@@ -1,5 +1,5 @@
-import express from 'express';
 import dotenv from 'dotenv';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import adminRouter from './_routes/adminRoutes';
 import userRouter from './_routes/userRoutes';
@@ -7,14 +7,14 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 import { connectDB } from './config/database';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
 dotenv.config();
+const PORT = process.env.PORT;
+
+const app = express();
 
 declare module 'express-session' {
     interface SessionData {
-        userId: mongoose.Types.ObjectId;
+        user_id: mongoose.Types.ObjectId;
     }
 }
 
@@ -35,7 +35,7 @@ app.use(session({
     unset: 'destroy',
 }));
 
-app.use('/admin', adminRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {

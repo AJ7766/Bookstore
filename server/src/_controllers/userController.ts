@@ -8,7 +8,7 @@ import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession } from '../utils/sessions';
 import { getUserBooks } from '../_repositories/userRepository';
 
-export const registerUser = async (req: Request, res: Response): Promise<any> => {
+export const createUserController = async (req: Request, res: Response): Promise<any> => {
     const { name, username, password }: UserProps = req.body;
 
     try {
@@ -17,14 +17,14 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
 
         await UserModel.create({ name, username, password: hashedPassword });
 
-        return res.status(200).json({ message: `Success registering ${name}`, user: { name, username } });
+        return res.status(201).json({ message: `Success registering ${name}`, user: { name, username } });
     } catch (error) {
         console.error("Registration error:", error);
-        return res.status(500).json({ message: 'Internal server error.', error });
+        return res.status(500).json({ message: error instanceof Error ? error.message : 'Internal server error' });
     }
 }
 
-export const loginUser = async (req: Request, res: Response): Promise<any> => {
+export const loginUserController = async (req: Request, res: Response): Promise<any> => {
     const { username, password } = req.body;
 
     try {
@@ -39,13 +39,13 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
         return res.status(200).json({ message: 'Login successful.' });
     } catch (error) {
         console.error("Login error:", error);
-        return res.status(500).json({ message: 'Internal server error.', error });
+        return res.status(403).json({ message: error instanceof Error ? error.message : 'Internal server error' });
     }
 }
 
 export const addBookToUser = async (req: Request, res: Response): Promise<any> => {
     const { _id: book_id, title }: BookProps = req.body;
-    const user_id = req.session.userId as mongoose.Types.ObjectId;
+    const user_id = new mongoose.Types.ObjectId(req.session.user_id);
 
     try {
         const [user, book] = await Promise.all([
@@ -53,8 +53,8 @@ export const addBookToUser = async (req: Request, res: Response): Promise<any> =
             getBookService(title, book_id)
         ]);
         const totalSpent = await calculateUserSpent(book.price, user);
-        
-        const updatedUser = await addBookService(user_id, book._id, totalSpent);
+
+        const updatedUser = await addBookService(user_id, book.title, book._id, book.stock, totalSpent);
 
         const updatedBook = await decrementBookStockService(user_id, book._id);
 
@@ -62,12 +62,12 @@ export const addBookToUser = async (req: Request, res: Response): Promise<any> =
 
     } catch (error) {
         console.error("Error adding book:", error);
-        return res.status(500).json({ message: "Internal server error.", error });
+        return res.status(400).json({ message: error instanceof Error ? error.message : 'Internal server error' });
     }
 };
 
 export const getAllUserBooks = async (req: Request, res: Response): Promise<any> => {
-    const user_id = req.session.userId as mongoose.Types.ObjectId;
+    const user_id = new mongoose.Types.ObjectId(req.session.user_id)
 
     try {
         const userBooks = await getUserBooks(user_id);
@@ -75,6 +75,6 @@ export const getAllUserBooks = async (req: Request, res: Response): Promise<any>
         return res.status(200).json({ userBooks });
     } catch (error) {
         console.error("Error getting user books:", error);
-        return res.status(500).json({ message: "Internal server error.", error });
+        return res.status(500).json({ message: error instanceof Error ? error.message : 'Internal server error' });
     }
 }
