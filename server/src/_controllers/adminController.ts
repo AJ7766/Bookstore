@@ -5,7 +5,7 @@ import { assignCookieSession } from '../utils/sessions';
 import { UserProps } from '../models/UserModel';
 
 export const loginAdminController = async (req: Request, res: Response): Promise<any> => {
-    const { username, password }: UserProps = req.body;
+    const { username = req.body.username.toLowerCase(), password }: UserProps = req.body;
 
     try {
         const admin = await getAdminService(username);
@@ -24,7 +24,7 @@ export const loginAdminController = async (req: Request, res: Response): Promise
 }
 
 export const createAdminController = async (req: Request, res: Response): Promise<any> => {
-    const { name, username, password }: UserProps = req.body;
+    const { name, username = req.body.username.toLowerCase(), password }: UserProps = req.body;
 
     try {
         const hashedPassword = await hashPassword(password);

@@ -9,7 +9,7 @@ import { assignCookieSession } from '../utils/sessions';
 import { getUserBooks } from '../_repositories/userRepository';
 
 export const createUserController = async (req: Request, res: Response): Promise<any> => {
-    const { name, username, password }: UserProps = req.body;
+    const { name, username = req.body.username.toLowerCase(), password }: UserProps = req.body;
 
     try {
         const hashedPassword = await hashPassword(password);
