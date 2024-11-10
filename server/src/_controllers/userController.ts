@@ -25,7 +25,7 @@ export const createUserController = async (req: Request, res: Response): Promise
 }
 
 export const loginUserController = async (req: Request, res: Response): Promise<any> => {
-    const { username, password } = req.body;
+    const { username = req.body.username.toLowerCase(), password } = req.body;
 
     try {
         const user = await getUserService(undefined, username);

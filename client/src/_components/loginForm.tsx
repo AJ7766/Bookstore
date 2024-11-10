@@ -28,7 +28,7 @@ export default function LoginForn() {
         throw new Error(errorMessage);
       }
       setError(false);
-      window.location.href = `/${username}`;
+      //window.location.href = `/${username}`;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Failed to login.";
