@@ -30,7 +30,7 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     try {
         const user = await getUserService(undefined, username);
 
-        const isMatch = comparePasswords(password, user.password);
+        const isMatch = await comparePasswords(password, user.password);
         if (!isMatch)
             throw new Error('Invalid username or password.');
 

@@ -14,7 +14,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: 'https://jackies-bookstore.vercel.app, http://localhost:5173',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -34,7 +34,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
+        secure: false,
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
         sameSite: 'strict'

@@ -4,7 +4,7 @@
   "main": "dist/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "echo hello",
     "start": "node dist/index.ts",
     "dev": "ts-node src/index.ts",
     "vercel-build": "echo hello"
