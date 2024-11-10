@@ -13,6 +13,16 @@ export const getUser = async (user_id?: mongoose.Types.ObjectId, username?: stri
 
 export const getUserBooks = async (user_id: mongoose.Types.ObjectId) => {
     return await UserModel.findById(user_id)
+        .select('books.book')
+        .populate({
+            path: 'books.book',
+            model: BookModel,
+            select: 'title price',
+        }).lean();
+}
+
+export const getPopulatedUser = async (user_id: mongoose.Types.ObjectId) => {
+    return await UserModel.findById(user_id)
         .populate({
             path: 'books.book',
             model: BookModel,

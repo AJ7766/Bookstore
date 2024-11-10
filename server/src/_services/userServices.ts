@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { UserModel, UserPopulatedProps, UserProps } from "../models/UserModel";
 import { addBookToUser, checkBookExist, createUser, getUser, getUserBooks, incrementBookQuantity } from "../_repositories/userRepository";
 import { checkBookStockService } from "./bookServices";
+import { BookProps } from "../models/BookModel";
 
 export const getUserForLoginService = async (user_id?: mongoose.Types.ObjectId, username?: string): Promise<UserProps> => {
     const user = await getUser(user_id, username);
@@ -27,7 +28,7 @@ export const getUserBooksService = async (user_id: mongoose.Types.ObjectId) => {
     if (!user)
         throw new Error('User not found');
 
-    return user as unknown as UserPopulatedProps;
+    return user as unknown as BookProps;
 }
 
 export const calculateUserSpent = async (

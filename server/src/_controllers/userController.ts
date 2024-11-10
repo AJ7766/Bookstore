@@ -6,7 +6,6 @@ import { decrementBookStockService, getBookService } from '../_services/bookServ
 import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserForLoginService } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession } from '../utils/sessions';
-import { getUserBooks } from '../_repositories/userRepository';
 
 export const createUserController = async (req: Request, res: Response): Promise<any> => {
     const { name, username = req.body.username.toLowerCase(), password }: UserProps = req.body;
@@ -64,11 +63,11 @@ export const addBookToUser = async (req: Request, res: Response): Promise<any> =
     }
 };
 
-export const getAllUserBooks = async (req: Request, res: Response): Promise<any> => {
+export const getUserBooksController = async (req: Request, res: Response): Promise<any> => {
     const user_id = new mongoose.Types.ObjectId(req.session.user_id)
 
     try {
-        const userBooks = await getUserBooks(user_id);
+        const userBooks = await getUserBooksService(user_id);
 
         return res.status(200).json({ userBooks });
     } catch (error) {
