@@ -34,9 +34,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
+        //secure: true,
         httpOnly: true,
-        maxAge: 1000 * 60 * 60,  // 1 hour
+        maxAge: 1000 * 60 * 60,
         sameSite: 'strict'
     },
     rolling: true,
@@ -52,9 +52,6 @@ app.get('/api', (req, res) => {
 
 connectDB()
     .then(() => {
-        app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
-        });
         console.log('Database connected');
     })
     .catch((error) => {
