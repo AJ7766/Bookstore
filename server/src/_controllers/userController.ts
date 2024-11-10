@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { UserModel, UserProps } from '../models/UserModel';
+import { UserProps } from '../models/UserModel';
 import mongoose from 'mongoose';
 import { BookProps, } from '../models/BookModel';
 import { decrementBookStockService, getBookService } from '../_services/bookServices';
-import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserService } from '../_services/userServices';
+import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserForLoginService } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession } from '../utils/sessions';
 import { getUserBooks } from '../_repositories/userRepository';
@@ -14,8 +14,6 @@ export const createUserController = async (req: Request, res: Response): Promise
     try {
         const hashedPassword = await hashPassword(password);
         await createUserService(name, username, hashedPassword)
-
-        await UserModel.create({ name, username, password: hashedPassword });
 
         return res.status(201).json({ message: `Success registering ${name}`, user: { name, username } });
     } catch (error) {
@@ -28,7 +26,7 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     const { username = req.body.username.toLowerCase(), password } = req.body;
 
     try {
-        const user = await getUserService(undefined, username);
+        const user = await getUserForLoginService(undefined, username);
 
         const isMatch = await comparePasswords(password, user.password);
         if (!isMatch)

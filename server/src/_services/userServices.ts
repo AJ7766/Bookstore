@@ -3,6 +3,15 @@ import { UserModel, UserPopulatedProps, UserProps } from "../models/UserModel";
 import { addBookToUser, checkBookExist, createUser, getUser, getUserBooks, incrementBookQuantity } from "../_repositories/userRepository";
 import { checkBookStockService } from "./bookServices";
 
+export const getUserForLoginService = async (user_id?: mongoose.Types.ObjectId, username?: string): Promise<UserProps> => {
+    const user = await getUser(user_id, username);
+
+    if (!user)
+        throw new Error('Invalid username or password.');
+
+    return user;
+};
+
 export const getUserService = async (user_id?: mongoose.Types.ObjectId, username?: string): Promise<UserProps> => {
     const user = await getUser(user_id, username);
 
