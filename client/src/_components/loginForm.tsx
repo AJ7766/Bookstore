@@ -11,13 +11,13 @@ export default function LoginForn() {
     event.preventDefault();
     setLoadingBtn(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api`, {
+        method: "GET",
+        //body: JSON.stringify({ username, password }),
+        //credentials: 'include',
+        //headers: {
+       //   "Content-Type": "application/json",
+       // },
       });
       if (!res.ok) {
         const data = await res.json();

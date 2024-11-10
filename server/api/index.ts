@@ -6,6 +6,7 @@ import userRouter from '../src/_routes/userRoutes';
 import session from 'express-session';
 import mongoose from 'mongoose';
 import { connectDB } from '../src/config/database';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,12 @@ declare module 'express-session' {
 }
 
 app.use(express.json());
+
+app.use(cors({
+    origin: '*',
+    methods: 'GET, POST',
+    allowedHeaders: 'Content-Type',
+  }));
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
