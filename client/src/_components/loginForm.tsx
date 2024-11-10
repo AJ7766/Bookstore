@@ -11,12 +11,8 @@ export default function LoginForn() {
     event.preventDefault();
     setLoadingBtn(true);
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const res = await fetch("https://bookstore-server-alpha.vercel.app/api/", {
+        method: "GET",
       });
       if (!res.ok) {
         const data = await res.json();

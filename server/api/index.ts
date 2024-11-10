@@ -2,11 +2,11 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import adminRouter from './_routes/adminRoutes';
-import userRouter from './_routes/userRoutes';
+import adminRouter from '../src/_routes/adminRoutes';
+import userRouter from '../src/_routes/userRoutes';
 import session from 'express-session';
 import mongoose from 'mongoose';
-import { connectDB } from './config/database';
+import { connectDB } from '../src/config/database';
 
 dotenv.config();
 const PORT = process.env.PORT;
