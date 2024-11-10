@@ -3,7 +3,7 @@ import { UserProps } from '../models/UserModel';
 import mongoose from 'mongoose';
 import { BookProps, } from '../models/BookModel';
 import { decrementBookStockService, getBookService } from '../_services/bookServices';
-import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserForLoginService } from '../_services/userServices';
+import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserForLoginService, getUserPopulatedService } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession } from '../utils/sessions';
 
@@ -46,7 +46,7 @@ export const addBookToUser = async (req: Request, res: Response): Promise<any> =
 
     try {
         const [user, book] = await Promise.all([
-            getUserBooksService(user_id),
+            getUserPopulatedService(user_id),
             getBookService(title, book_id)
         ]);
         const totalSpent = await calculateUserSpent(book.price, user);

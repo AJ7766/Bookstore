@@ -9,7 +9,7 @@ export interface BookProps {
     user: mongoose.Types.ObjectId[];
 }
 
-export interface PopulatedBookProps {
+export interface BookPopulatedProps {
     book: BookProps;
     quantity: number;
 }

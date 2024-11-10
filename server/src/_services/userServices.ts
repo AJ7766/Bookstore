@@ -31,6 +31,15 @@ export const getUserBooksService = async (user_id: mongoose.Types.ObjectId) => {
     return user as unknown as BookProps;
 }
 
+export const getUserPopulatedService = async (user_id: mongoose.Types.ObjectId) => {
+    const user = await getUserBooks(user_id);
+    console.log("Populated books:", user?.books)
+    if (!user)
+        throw new Error('User not found');
+
+    return user as unknown as UserPopulatedProps;
+}
+
 export const calculateUserSpent = async (
     book_price: number,
     user: UserPopulatedProps,

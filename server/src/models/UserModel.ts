@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema, Document } from "mongoose";
-import { PopulatedBookProps } from "./BookModel";
+import { BookPopulatedProps } from "./BookModel";
 
 export interface UserProps {
     _id: mongoose.Types.ObjectId;
@@ -11,7 +11,7 @@ export interface UserProps {
 }
 
 export interface UserPopulatedProps extends Omit<UserProps, 'books'> {
-    books: PopulatedBookProps[];
+    books: BookPopulatedProps[];
 }
 
 export interface UserWithQuantityProps {
