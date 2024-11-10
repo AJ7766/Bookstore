@@ -14,7 +14,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://jackies-bookstore.vercel.app/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -53,7 +53,6 @@ app.get('/api', (req, res) => {
 connectDB()
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`Server is running on http://localhost:${PORT}`);
         });
         console.log('Database connected');
     })
