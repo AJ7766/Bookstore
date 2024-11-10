@@ -14,6 +14,7 @@ export default function LoginForn() {
       const res = await fetch("https://bookstore-server-alpha.vercel.app/api/", {
         method: "POST",
         body: JSON.stringify({ username, password }),
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
