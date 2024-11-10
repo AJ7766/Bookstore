@@ -6,7 +6,7 @@ export const createAdminValidation = (req: Request, res: Response, next: NextFun
     const { name, username, password, key }: AdminRegisterProps = req.body;
 
     if (key !== process.env.ADMIN_REGISTER_KEY)
-        return res.status(400).json({ message: "Invalid username or password." });
+        return res.status(400).json({ message: "Error creating admin account." });
 
 
     const validationResponse = createUserSchema({ name, username, password });
