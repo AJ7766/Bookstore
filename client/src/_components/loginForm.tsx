@@ -3,8 +3,7 @@ import { useState } from "react";
 export default function LoginForn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [message, setMessage] = useState("");
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,21 +18,16 @@ export default function LoginForn() {
           "Content-Type": "application/json",
         },
       });
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
         const errorMessage = data.message || "Failed to login.";
-        console.log(errorMessage);
-        setError(true);
-        setErrorMsg(errorMessage);
         throw new Error(errorMessage);
       }
-      setError(false);
+      setMessage(data.message);
       //window.location.href = `/${username}`;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to login.";
-      setErrorMsg(errorMessage);
-      setError(true);
+      setMessage(error instanceof Error ? error.message : "Failed to login.");
     } finally {
       setLoadingBtn(false);
     }
@@ -43,9 +37,9 @@ export default function LoginForn() {
     <div className="login-form-container">
       <img src="../images/bookstore-logo.png" />
       <div className="h-10 flex items-center px-9">
-        {error ? (
+        {message ? (
           <p className="loginTextMessage text-gray-500 text-center">
-            {errorMsg}
+            {message}
           </p>
         ) : (
           <p className="text-white text-center">&nbsp;</p>
