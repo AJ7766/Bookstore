@@ -16,6 +16,8 @@ export default function LoginForn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingBtn(true);
+    const cookiesBeforeRequest = document.cookie;
+    console.log("Cookies before request:", cookiesBeforeRequest);
     try {
       const res = await fetch(apiUrl, {
         method: "POST",
