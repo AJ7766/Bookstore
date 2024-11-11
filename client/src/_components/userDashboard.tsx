@@ -9,9 +9,9 @@ export default function UserDashboard() {
   const { userAuthenticate, setUserAuthenticate } = useAuth();
 
   const apiUrl =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api/my-books"
-    : `${import.meta.env.VITE_API_URL}/api/my-books`;
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api/my-books"
+      : `${import.meta.env.VITE_API_URL}/api/my-books`;
 
   useEffect(() => {
     const fetchData = async () => {
