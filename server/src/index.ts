@@ -7,6 +7,7 @@ import userRouter from './_routes/userRoutes';
 import session from 'express-session';
 import mongoose from 'mongoose';
 import { connectDB } from './config/database';
+import MongoStore from 'connect-mongo';
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -14,9 +15,9 @@ const PORT = process.env.PORT;
 const app = express();
 
 app.use(cors({
-    origin: '*',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type'],
     credentials: true,
 }));
 
@@ -33,18 +34,22 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'fallbackKey',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
         secure: false,
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
-        sameSite: 'strict'
+        sameSite: 'none'
     },
     rolling: true,
     unset: 'destroy',
 }));
 
 app.use('/api/admin', adminRouter);
-app.use('/api', userRouter);
+app.use('/api', (req, res, next) => {
+    console.log("Cookie store:", req.sessionStore);
+    next();
+}, userRouter);
 
 app.get('/api', (req, res) => {
     res.send('Welcome to the Bookstore API!');

@@ -3,7 +3,7 @@ import { UserModel } from '../../models/UserModel';
 
 export const userAuthenticate = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.session.user_id) 
-        return res.status(401).json({ message: 'Unauthorized access. Please log in.' });
+        return res.status(401).json({ message: 'No session was found.' });
 
     try {
         const user = await UserModel.findById(req.session.user_id)

@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { useAuth } from "../context/useAuth";
 
 export default function LoginForn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loadingBtn, setLoadingBtn] = useState(false);
+  const { setUserAuthenticate } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingBtn(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
+      //const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
+        const res = await fetch(`http://localhost:3000/api/login`, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         credentials: "include",
@@ -24,7 +27,10 @@ export default function LoginForn() {
         const errorMessage = data.message || "Failed to login.";
         throw new Error(errorMessage);
       }
+      const cookies = document.cookie;
+      console.log('Cookies from browser:', cookies);
       setMessage(data.message);
+      setUserAuthenticate(true);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Failed to login.");
     } finally {

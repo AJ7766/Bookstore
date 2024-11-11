@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { BookProps } from "../models/BookModel";
+import { useAuth } from "../context/useAuth";
 
 export default function UserDashboard() {
   const [message, setMessage] = useState("");
   const [fetching, setFetching] = useState(false);
   const [books, setBooks] = useState<BookProps>();
-
+  const { userAuthenticate } = useAuth();
   useEffect(() => {
     const fetchData = async () => {
       try {
         setFetching(true);
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/my-books`,
-          {
+        //const res = await fetch(`${import.meta.env.VITE_API_URL}/api/my-books`,{
+          const res = await fetch(`http://localhost:3000/api/my-books`, {
             method: "GET",
             credentials: "include",
           }
@@ -31,12 +31,16 @@ export default function UserDashboard() {
         );
       } finally {
         setFetching(false);
+        console.log(message);
       }
     };
     fetchData();
-  }, []);
-
-  return fetching ? null : (
+  }, [userAuthenticate, message]);
+  console.log("msg",message);
+  console.log("Auth:" , userAuthenticate)
+  return fetching ? null : userAuthenticate ? (
+    <h1>Not authenticated</h1>
+  ) : (
     <div>
       <h1>{message}</h1>
       {books && books.price}
