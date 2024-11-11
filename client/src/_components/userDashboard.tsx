@@ -7,12 +7,17 @@ export default function UserDashboard() {
   const [fetching, setFetching] = useState(true);
   const [user, setUser] = useState<UserPopulatedProps>();
   const { userAuthenticate, setUserAuthenticate } = useAuth();
+
+  const apiUrl =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api/my-books"
+    : `${import.meta.env.VITE_API_URL}/api/my-books`;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setFetching(true);
-        //const res = await fetch(`${import.meta.env.VITE_API_URL}/api/my-books`,{
-        const res = await fetch(`http://localhost:3000/api/my-books`, {
+        const res = await fetch(apiUrl, {
           method: "GET",
           credentials: "include",
         });
@@ -34,7 +39,7 @@ export default function UserDashboard() {
       }
     };
     fetchData();
-  }, [userAuthenticate, setUserAuthenticate]);
+  }, [userAuthenticate, setUserAuthenticate, apiUrl]);
 
   return fetching ? null : !userAuthenticate ? (
     <h1>Not authenticated</h1>

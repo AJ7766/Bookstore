@@ -8,12 +8,16 @@ export default function LoginForn() {
   const [loadingBtn, setLoadingBtn] = useState(false);
   const { setUserAuthenticate } = useAuth();
 
+  const apiUrl =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api/login"
+      : `${import.meta.env.VITE_API_URL}/api/login`;
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingBtn(true);
     try {
-      //const res = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
-        const res = await fetch(`http://localhost:3000/api/login`, {
+      const res = await fetch(apiUrl, {
         method: "POST",
         body: JSON.stringify({ username, password }),
         credentials: "include",
@@ -28,7 +32,7 @@ export default function LoginForn() {
         throw new Error(errorMessage);
       }
       const cookies = document.cookie;
-      console.log('Cookies from browser:', cookies);
+      console.log("Cookies from browser:", cookies);
       setMessage(data.message);
       setUserAuthenticate(true);
     } catch (error) {

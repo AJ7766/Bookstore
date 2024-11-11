@@ -15,11 +15,15 @@ export const UserContext = createContext<UserContextProps | undefined>(
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [userAuthenticate, setUserAuthenticate] = useState(false);
   const [fetchingCookie, setFetchingCookie] = useState(true);
+  const apiUrl =
+    import.meta.env.MODE === "development"
+      ? "http://localhost:3000/api/get-cookie"
+      : `${import.meta.env.VITE_API_URL}/api/get-cookie`;
   useEffect(() => {
     const fetchData = async () => {
       try {
         setFetchingCookie(true);
-        const res = await fetch(`http://localhost:3000/api/get-cookie`, {
+        const res = await fetch(apiUrl, {
           method: "GET",
           credentials: "include",
         });
@@ -28,18 +32,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           throw new Error(data.message || "Failed to retrieve cookie.");
         }
         setUserAuthenticate(true);
-      } catch (error:unknown) {
+      } catch (error: unknown) {
         console.log(error);
         setUserAuthenticate(false);
-      }finally{
+      } finally {
         setFetchingCookie(false);
       }
     };
     fetchData();
-  }, [userAuthenticate, setUserAuthenticate]);
+  }, [userAuthenticate, setUserAuthenticate, apiUrl]);
 
   return (
-    <UserContext.Provider value={{ userAuthenticate, setUserAuthenticate, fetchingCookie }}>
+    <UserContext.Provider
+      value={{ userAuthenticate, setUserAuthenticate, fetchingCookie }}
+    >
       {children}
     </UserContext.Provider>
   );
