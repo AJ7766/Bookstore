@@ -13,7 +13,7 @@ export const updateBook = async ({ _id, title, price, stock, limited }: UpdateBo
     return await BookModel.findByIdAndUpdate(_id,
         { $set: { title, price, stock, limited } },
         { new: true }
-    );
+    ).lean();
 }
 
 export const getBooks = async () => {
@@ -29,5 +29,5 @@ export const decrementBookStock = async (book_id: mongoose.Types.ObjectId, user_
             $inc: { stock: -1 }
         },
         { new: true }
-    );
+    ).lean();
 }

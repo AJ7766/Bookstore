@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { UserProps } from '../models/UserModel';
 import mongoose from 'mongoose';
-import { BookProps, } from '../models/BookModel';
+import { BookProps } from '../models/BookModel';
 import { decrementBookStockService, getBookService } from '../_services/bookServices';
-import { addBookService, calculateUserSpent, createUserService, getUserBooksService, getUserForLoginService, getUserPopulatedService } from '../_services/userServices';
+import { addBookService, calculateUserSpent, createUserService, getUserForLoginService, getUserPopulatedService,  } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
-import { assignCookieSession } from '../utils/sessions';
+import { assignCookieSession, checkCookieExist } from '../utils/sessions';
 
 export const createUserController = async (req: Request, res: Response): Promise<any> => {
     const { name, username = req.body.username.toLowerCase(), password }: UserProps = req.body;
@@ -40,7 +40,7 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     }
 }
 
-export const addBookToUser = async (req: Request, res: Response): Promise<any> => {
+export const addBookToUserController = async (req: Request, res: Response): Promise<any> => {
     const { _id: book_id, title }: BookProps = req.body;
     const user_id = new mongoose.Types.ObjectId(req.session.user_id);
 
@@ -67,11 +67,22 @@ export const getUserBooksController = async (req: Request, res: Response): Promi
     const user_id = new mongoose.Types.ObjectId(req.session.user_id)
 
     try {
-        const userBooks = await getUserBooksService(user_id);
+        const populatedUser = await getUserPopulatedService(user_id);
 
-        return res.status(200).json({ userBooks });
+        return res.status(200).json({ message: 'Successfully retrieving user books', user: populatedUser});
     } catch (error) {
         console.error("Error getting user books:", error);
+        return res.status(500).json({ message: error instanceof Error ? error.message : 'Internal server error' });
+    }
+}
+
+export const checkUserAuthController = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await checkCookieExist(req);
+
+        return res.status(200).json({ message: 'Successfully retrieving cookie.'});
+    } catch (error) {
+        console.error("Error getting cookie:", error);
         return res.status(500).json({ message: error instanceof Error ? error.message : 'Internal server error' });
     }
 }

@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { UserModel, UserPopulatedProps, UserProps } from "../models/UserModel";
-import { addBookToUser, checkBookExist, createUser, getUser, getUserBooks, incrementBookQuantity } from "../_repositories/userRepository";
+import { addBookToUser, checkBookExist, createUser, getPopulatedUser, getUser, incrementBookQuantity } from "../_repositories/userRepository";
 import { checkBookStockService } from "./bookServices";
-import { BookProps } from "../models/BookModel";
 
 export const getUserForLoginService = async (user_id?: mongoose.Types.ObjectId, username?: string): Promise<UserProps> => {
     const user = await getUser(user_id, username);
@@ -22,18 +21,8 @@ export const getUserService = async (user_id?: mongoose.Types.ObjectId, username
     return user;
 };
 
-export const getUserBooksService = async (user_id: mongoose.Types.ObjectId) => {
-    const user = await getUserBooks(user_id);
-    console.log("Populated books:", user?.books)
-    if (!user)
-        throw new Error('User not found');
-
-    return user as unknown as BookProps;
-}
-
 export const getUserPopulatedService = async (user_id: mongoose.Types.ObjectId) => {
-    const user = await getUserBooks(user_id);
-    console.log("Populated books:", user?.books)
+    const user = await getPopulatedUser(user_id);
     if (!user)
         throw new Error('User not found');
 
@@ -70,9 +59,9 @@ export const checkBookExistService = async (user_id: mongoose.Types.ObjectId, bo
 }
 
 export const addBookService = async (user_id: mongoose.Types.ObjectId, book_title: string, book_id: mongoose.Types.ObjectId, book_stock: number, totalSpent: number) => {
-    
+
     await checkBookStockService(book_title, book_id, book_stock);
-    
+
     const bookExists = await checkBookExistService(user_id, book_id);
     console.log("Book Existence:", bookExists);
     let user;

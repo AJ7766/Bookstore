@@ -11,18 +11,9 @@ export const getUser = async (user_id?: mongoose.Types.ObjectId, username?: stri
     return await UserModel.findOne({ $or: [{ _id: user_id }, { username }] }).lean();
 }
 
-export const getUserBooks = async (user_id: mongoose.Types.ObjectId) => {
-    return await UserModel.findById(user_id)
-        .select('books.book')
-        .populate({
-            path: 'books.book',
-            model: BookModel,
-            select: 'title price',
-        }).lean();
-}
-
 export const getPopulatedUser = async (user_id: mongoose.Types.ObjectId) => {
     return await UserModel.findById(user_id)
+        .select('name username books totalSpent')
         .populate({
             path: 'books.book',
             model: BookModel,

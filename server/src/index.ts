@@ -39,17 +39,14 @@ app.use(session({
         secure: false,
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
-        sameSite: 'none'
+        sameSite: 'lax'
     },
     rolling: true,
     unset: 'destroy',
 }));
 
 app.use('/api/admin', adminRouter);
-app.use('/api', (req, res, next) => {
-    console.log("Cookie store:", req.sessionStore);
-    next();
-}, userRouter);
+app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {
     res.send('Welcome to the Bookstore API!');

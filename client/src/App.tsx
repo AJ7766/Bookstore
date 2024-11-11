@@ -1,16 +1,18 @@
 import LoginForn from "./_components/loginForm";
 import UserDashboard from "./_components/userDashboard";
 import "./App.css";
-import { UserProvider } from "./context/useAuth";
+import { useAuth } from "./context/useAuth";
 
 function App() {
+  const { userAuthenticate, fetchingCookie } = useAuth();
   return (
-    <UserProvider>
-      <div className="platform">
-        <LoginForn />
+    <div className="platform">
+      {fetchingCookie ? null : userAuthenticate ? (
         <UserDashboard />
-      </div>
-    </UserProvider>
+      ) : (
+        <LoginForn />
+      )}
+    </div>
   );
 }
 
