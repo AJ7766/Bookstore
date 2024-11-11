@@ -39,7 +39,7 @@ app.use(session({
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
         secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
+        httpOnly: false,
         maxAge: 1000 * 60 * 60,
         sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax'
     },
@@ -51,7 +51,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {
-    res.send('Welcome to the Bookstore API!s');
+    res.send('Welcome to the Bookstore API!');
 });
 
 connectDB()
