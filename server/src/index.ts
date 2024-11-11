@@ -51,7 +51,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {
-    res.send('Welcome to the Bookstore API!');
+    res.send('Welcome to the Bookstore API!s');
 });
 
 connectDB()
