@@ -20,8 +20,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       ? "http://localhost:3000/api/get-cookie"
       : `${import.meta.env.VITE_API_URL}/api/get-cookie`;
   useEffect(() => {
+    const cookie = document.cookie;
+
     const fetchData = async () => {
       try {
+        console.log("Cookies before request:", cookie);
         setFetchingCookie(true);
         const res = await fetch(apiUrl, {
           method: "GET",
@@ -37,6 +40,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setUserAuthenticate(false);
       } finally {
         setFetchingCookie(false);
+        console.log("Cookies from browser:", cookie);
       }
     };
     fetchData();

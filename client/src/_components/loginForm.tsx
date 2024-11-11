@@ -16,8 +16,7 @@ export default function LoginForn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingBtn(true);
-    const cookiesBeforeRequest = document.cookie;
-    console.log("Cookies before request:", cookiesBeforeRequest);
+
     try {
       const res = await fetch(apiUrl, {
         method: "POST",
@@ -33,8 +32,6 @@ export default function LoginForn() {
         const errorMessage = data.message || "Failed to login.";
         throw new Error(errorMessage);
       }
-      const cookies = document.cookie;
-      console.log("Cookies from browser:", cookies);
       setMessage(data.message);
       setUserAuthenticate(true);
     } catch (error) {
