@@ -58,7 +58,7 @@ export default function UserDashboard() {
           ))}
         </>
       ) : (
-        <p>No books available.</p> // Show when there are no books
+        <p>No books available.</p>
       )}
     </div>
   );

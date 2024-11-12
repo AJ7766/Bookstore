@@ -53,7 +53,6 @@ app.use('/api/admin', adminRouter);
 app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {
-    res.cookie('test', '123456');
     res.send('Welcome to the Bookstore API!');
     res.status(200);
 });
