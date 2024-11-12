@@ -31,7 +31,7 @@ declare module 'express-session' {
 
 app.use(express.json());
 
-app.set('trust proxy', 2);
+app.set('trust proxy', 1);
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
