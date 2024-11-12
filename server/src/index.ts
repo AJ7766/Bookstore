@@ -31,7 +31,7 @@ declare module 'express-session' {
 
 app.use(express.json());
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 2);
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
@@ -43,7 +43,7 @@ app.use(session({
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
-        sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax'
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     },
     rolling: true,
     unset: 'destroy',
@@ -54,7 +54,6 @@ app.use('/api', userRouter);
 
 app.get('/api', (req, res) => {
     res.send('Welcome to the Bookstore API!');
-    res.status(200);
 });
 
 connectDB()

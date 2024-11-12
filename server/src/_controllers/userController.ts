@@ -32,7 +32,7 @@ export const loginUserController = async (req: Request, res: Response): Promise<
             throw new Error('Invalid username or password.');
 
         await assignCookieSession(req, user._id);
-        res.cookie('test', '123456');
+        
         return res.status(200).json({ message: 'Login successful.' });
     } catch (error) {
         console.error("Login error:", error);
