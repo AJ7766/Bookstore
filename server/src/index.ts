@@ -31,6 +31,8 @@ declare module 'express-session' {
 
 app.use(express.json());
 
+app.set('trust proxy', 1);
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     secret: process.env.SESSION_SECRET || 'fallbackKey',
@@ -38,7 +40,7 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
         maxAge: 1000 * 60 * 60,
         sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'lax'
