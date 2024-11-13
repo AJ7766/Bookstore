@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { fetchLoginAPI } from "../_services/fetchLoginAPI";
 import { useAuth } from "../context/useAuth";
-import LoginForm from "../_components/LoginForm";
+import LoginFormComponent from "../_components/LoginForm";
 
 export default function LoginFormContainer() {
   const [user, setUser] = useState({
@@ -30,7 +30,7 @@ export default function LoginFormContainer() {
   };
 
   return (
-    <LoginForm
+    <LoginFormComponent
       user={user}
       handleInputChange={handleInputChange}
       message={message}
