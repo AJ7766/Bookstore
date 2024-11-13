@@ -3,7 +3,7 @@ import { UserProps } from '../models/UserModel';
 import mongoose from 'mongoose';
 import { BookProps } from '../models/BookModel';
 import { decrementBookStockService, getBookService } from '../_services/bookServices';
-import { addBookService, calculateUserSpent, createUserService, getUserForLoginService, getUserPopulatedService,  } from '../_services/userServices';
+import { addBookService, calculateUserSpent, createUserService, getUserForLoginService, getUserPopulatedService, getUserService,  } from '../_services/userServices';
 import { comparePasswords, hashPassword } from '../utils/bcrypt';
 import { assignCookieSession, checkCookieExist } from '../utils/sessions';
 
@@ -25,8 +25,8 @@ export const loginUserController = async (req: Request, res: Response): Promise<
     const { username = req.body.username.toLowerCase(), password } = req.body;
 
     try {
-        const user = await getUserForLoginService(undefined, username);
-
+        const user = await getUserForLoginService(username);
+        console.log("user:",user)
         const isMatch = await comparePasswords(password, user.password);
         if (!isMatch)
             throw new Error('Invalid username or password.');
@@ -78,9 +78,10 @@ export const getUserBooksController = async (req: Request, res: Response): Promi
 
 export const checkUserAuthController = async (req: Request, res: Response): Promise<any> => {
     try {
-        await checkCookieExist(req);
+        const user_id = await checkCookieExist(req);
+        const user = await getUserService(user_id);
 
-        return res.status(200).json({ message: 'Successfully retrieving cookie.'});
+        return res.status(200).json({ message: 'Successfully retrieving cookie.', user});
     } catch (error) {
         console.error("Error getting cookie:", error);
         return res.status(500).json({ message: error instanceof Error ? error.message : 'Internal server error' });

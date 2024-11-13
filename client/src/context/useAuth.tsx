@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { UserProps } from "../models/UserModel";
+import { fetchCookieAPI } from "../_services/fetchCookieAPI";
 
 interface UserContextProps {
+  user: UserProps | null;
   userAuthenticate: boolean;
   setUserAuthenticate: React.Dispatch<React.SetStateAction<boolean>>;
   fetchingCookie: boolean;
@@ -11,44 +14,34 @@ export const UserContext = createContext<UserContextProps | undefined>(
   undefined
 );
 
-// Create the Provider component
 export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserProps | null>(null);
   const [userAuthenticate, setUserAuthenticate] = useState(false);
   const [fetchingCookie, setFetchingCookie] = useState(true);
-  const apiUrl =
-    import.meta.env.MODE === "development"
-      ? "http://localhost:3000/api/get-cookie"
-      : `${import.meta.env.VITE_API_URL}/api/get-cookie`;
-  useEffect(() => {
-    const cookie = document.cookie;
 
-    const fetchData = async () => {
+  useEffect(() => {
+    const fetchCookieData = async () => {
       try {
-        console.log("Cookies before request:", cookie);
         setFetchingCookie(true);
-        const res = await fetch(apiUrl, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.message || "Failed to retrieve cookie.");
+        const { message, user } = await fetchCookieAPI();
+        if(user){
+          setUser(user);
+          setUserAuthenticate(true);
         }
-        setUserAuthenticate(true);
-      } catch (error: unknown) {
+        console.log(message);
+      } catch (error) {
         console.log(error);
         setUserAuthenticate(false);
       } finally {
         setFetchingCookie(false);
-        console.log("Cookies from browser:", cookie);
       }
-    };
-    fetchData();
-  }, [userAuthenticate, setUserAuthenticate, apiUrl]);
+    }
+    fetchCookieData();
+  }, []);
 
   return (
     <UserContext.Provider
-      value={{ userAuthenticate, setUserAuthenticate, fetchingCookie }}
+      value={{ user, userAuthenticate, setUserAuthenticate, fetchingCookie }}
     >
       {children}
     </UserContext.Provider>

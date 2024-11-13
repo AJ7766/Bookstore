@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { UserModel, UserPopulatedProps, UserProps } from "../models/UserModel";
-import { addBookToUser, checkBookExist, createUser, getPopulatedUser, getUser, incrementBookQuantity } from "../_repositories/userRepository";
+import { addBookToUser, checkBookExist, createUser, getPopulatedUser, getUser, getUserForLogin, incrementBookQuantity } from "../_repositories/userRepository";
 import { checkBookStockService } from "./bookServices";
 
-export const getUserForLoginService = async (user_id?: mongoose.Types.ObjectId, username?: string): Promise<UserProps> => {
-    const user = await getUser(user_id, username);
+export const getUserForLoginService = async (username: string): Promise<UserProps> => {
+    const user = await getUserForLogin(username);
 
     if (!user)
         throw new Error('Invalid username or password.');

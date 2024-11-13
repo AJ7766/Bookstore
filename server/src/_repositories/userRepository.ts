@@ -8,7 +8,11 @@ export const createUser = async (name: string, username: string, hashedPassword:
 }
 
 export const getUser = async (user_id?: mongoose.Types.ObjectId, username?: string) => {
-    return await UserModel.findOne({ $or: [{ _id: user_id }, { username }] }).lean();
+    return await UserModel.findOne({ $or: [{ _id: user_id }, { username }] }).select('-_id -password').lean();
+}
+
+export const getUserForLogin = async (username: string) => {
+    return await UserModel.findOne({ username }).select('_id password').lean();
 }
 
 export const getPopulatedUser = async (user_id: mongoose.Types.ObjectId) => {

@@ -1,17 +1,36 @@
-import LoginForn from "./_components/loginForm";
-import UserDashboard from "./_components/userDashboard";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import { useAuth } from "./context/useAuth";
+import MyBooksPage from "./pages/my-books";
+import LoginForm from "./_containers/LoginForm";
+import User from "./_containers/User";
+
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { userAuthenticate, fetchingCookie } = useAuth();
+  return !fetchingCookie ? userAuthenticate ? children : <LoginForm /> : null;
+}
 
 function App() {
-  const { userAuthenticate, fetchingCookie } = useAuth();
   return (
     <div className="platform">
-      {fetchingCookie ? null : userAuthenticate ? (
-        <UserDashboard />
-      ) : (
-        <LoginForn />
-      )}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <User />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-books"
+          element={
+            <ProtectedRoute>
+              <MyBooksPage />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </div>
   );
 }

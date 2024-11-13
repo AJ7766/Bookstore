@@ -1,72 +1,36 @@
-import { useState } from "react";
-import { useAuth } from "../context/useAuth";
+interface UserProps {
+  username: string;
+  password: string;
+}
+interface LoginFormProps {
+  user: UserProps;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  message: string;
+  loadingBtn: boolean;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
 
-export default function LoginForn() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [loadingBtn, setLoadingBtn] = useState(false);
-  const { setUserAuthenticate } = useAuth();
-
-  const apiUrl =
-    import.meta.env.MODE === "development"
-      ? "http://localhost:3000/api/login"
-      : `${import.meta.env.VITE_API_URL}/api/login`;
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoadingBtn(true);
-
-    try {
-      const res = await fetch(apiUrl, {
-        method: "POST",
-        body: JSON.stringify({ username, password }),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        const errorMessage = data.message || "Failed to login.";
-        throw new Error(errorMessage);
-      }
-      setMessage(data.message);
-      setUserAuthenticate(true);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Failed to login.");
-    } finally {
-      setLoadingBtn(false);
-    }
-  };
-
+export default function LoginForm({
+  user,
+  handleInputChange,
+  message,
+  loadingBtn,
+  onSubmit,
+}: LoginFormProps) {
   return (
     <div className="login-form-container">
       <img src="../images/bookstore-logo.png" />
-      <div className="h-10 flex items-center px-9">
-        {message ? (
-          <p className="loginTextMessage text-gray-500 text-center">
-            {message}
-          </p>
-        ) : (
-          <p className="text-white text-center">&nbsp;</p>
-        )}
-      </div>
-      <form
-        className="loginForm flex flex-col"
-        data-testid="login-form"
-        onSubmit={handleSubmit}
-      >
-        <div className="inputsContainer">
+      <div>{message ? <p>{message}</p> : <p>&nbsp;</p>}</div>
+      <form onSubmit={onSubmit}>
+        <div>
           <div>
             <input
               type="text"
               id="username"
               name="username"
               placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={user.username}
+              onChange={handleInputChange}
               autoComplete="username"
             />
           </div>
@@ -76,13 +40,13 @@ export default function LoginForn() {
               id="password"
               name="password"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={user.password}
+              onChange={handleInputChange}
               autoComplete="current-password"
             />
           </div>
         </div>
-        <div className="buttonsContainer">
+        <div>
           <button
             type="submit"
             className={`blackBtn ${loadingBtn ? "blueBtnLoading" : ""}`}
