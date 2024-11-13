@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { fetchLoginAPI } from "../_services/fetchLoginAPI";
 import { useAuth } from "../context/useAuth";
-import LoginFormComponent from "../_components/LoginForm";
+import LoginFormComponent from "../_components/LoginFormComponent";
 
-export default function LoginFormContainer() {
+export default function LoginForm() {
   const [user, setUser] = useState({
     username: "",
     password: "",
