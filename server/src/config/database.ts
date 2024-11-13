@@ -19,7 +19,6 @@ export async function connectDB() {
         const MONGODB_URI = await getUri();
         const client = await mongoose.connect(MONGODB_URI);
         cachedClient = client;
-        console.log("connected")
         return client;
     } catch (error: any) {
         throw new Error(error.message);
