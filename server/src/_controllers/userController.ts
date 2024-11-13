@@ -26,10 +26,8 @@ export const loginUserController = async (req: Request, res: Response): Promise<
 
     try {
         const user = await getUserForLoginService(username);
-        console.log("user:",user)
-        const isMatch = await comparePasswords(password, user.password);
-        if (!isMatch)
-            throw new Error('Invalid username or password.');
+        
+        await comparePasswords(password, user.password);
 
         await assignCookieSession(req, user._id);
         
