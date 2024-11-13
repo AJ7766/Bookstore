@@ -1,7 +1,7 @@
 import { UserPopulatedProps } from "../../../models/UserModel";
 
 interface MyBooksListProps {
-  user: UserPopulatedProps;
+  user: UserPopulatedProps | null;
   message: string;
 };
 
